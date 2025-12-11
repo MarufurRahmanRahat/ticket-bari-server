@@ -47,10 +47,12 @@ app.get('/health', (req, res) => {
 // Imported routes
 const authRoutes = require('./routes/authRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 // Using routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 
 
