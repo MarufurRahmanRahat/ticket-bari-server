@@ -21,7 +21,7 @@ app.use(cookieParser());
 // CORS Configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: process.env.CLIENT_URL || 'https://ticket-bari-client.web.app',
     credentials: true,
   })
 );

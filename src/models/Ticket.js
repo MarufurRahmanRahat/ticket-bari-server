@@ -77,21 +77,29 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-
 // Index for better search performance
 ticketSchema.index({ fromLocation: 1, toLocation: 1, transportType: 1 });
 ticketSchema.index({ verificationStatus: 1, isAdvertised: 1 });
-ticketSchema.index({ createdAt: -1 }); // For latest tickets
+ticketSchema.index({ createdAt: -1 });
 
-// Virtual field to check if ticket is expired
+// Virtual field to check if ticket is expired - FIXED VERSION
 ticketSchema.virtual('isExpired').get(function () {
-  const departureDateTime = new Date(this.departureDate);
-  const [hours, minutes] = this.departureTime.split(':');
-  departureDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-  
-  return departureDateTime < new Date();
-});
+  // Safety check for departureTime and departureDate
+  if (!this.departureTime || !this.departureDate) {
+    return false;
+  }
 
+  try {
+    const departureDateTime = new Date(this.departureDate);
+    const [hours, minutes] = this.departureTime.split(':');
+    departureDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    
+    return departureDateTime < new Date();
+  } catch (error) {
+    console.error('Error calculating isExpired:', error);
+    return false;
+  }
+});
 
 // Ensure virtuals are included when converting to JSON
 ticketSchema.set('toJSON', { virtuals: true });
